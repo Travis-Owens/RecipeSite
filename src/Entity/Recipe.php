@@ -21,16 +21,16 @@ class Recipe
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: RecipeCategory::class, inversedBy: 'recipes')]
-    private Collection $categoryID;
+    #[ORM\ManyToMany(targetEntity: StepGroup::class, inversedBy: 'recipes')]
+    private Collection $StepGroupId;
 
-    #[ORM\OneToMany(mappedBy: 'recipeID', targetEntity: RecipeStep::class, orphanRemoval: true)]
-    private Collection $recipeSteps;
+    #[ORM\ManyToMany(targetEntity: RecipeCategory::class, inversedBy: 'recipes')]
+    private Collection $RecipeCategoryId;
 
     public function __construct()
     {
-        $this->categoryID = new ArrayCollection();
-        $this->recipeSteps = new ArrayCollection();
+        $this->StepGroupId = new ArrayCollection();
+        $this->RecipeCategoryId = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,57 +63,50 @@ class Recipe
     }
 
     /**
-     * @return Collection<int, RecipeCategory>
+     * @return Collection<int, StepGroup>
      */
-    public function getCategoryID(): Collection
+    public function getStepGroupId(): Collection
     {
-        return $this->categoryID;
+        return $this->StepGroupId;
     }
 
-    public function addCategoryID(RecipeCategory $categoryID): self
+    public function addStepGroupId(StepGroup $stepGroupId): self
     {
-        if (!$this->categoryID->contains($categoryID)) {
-            $this->categoryID->add($categoryID);
+        if (!$this->StepGroupId->contains($stepGroupId)) {
+            $this->StepGroupId->add($stepGroupId);
         }
 
         return $this;
     }
 
-    public function removeCategoryID(RecipeCategory $categoryID): self
+    public function removeStepGroupId(StepGroup $stepGroupId): self
     {
-        $this->categoryID->removeElement($categoryID);
+        $this->StepGroupId->removeElement($stepGroupId);
 
         return $this;
     }
 
     /**
-     * @return Collection<int, RecipeStep>
+     * @return Collection<int, RecipeCategory>
      */
-    public function getRecipeSteps(): Collection
+    public function getRecipeCategoryId(): Collection
     {
-        return $this->recipeSteps;
+        return $this->RecipeCategoryId;
     }
 
-    public function addRecipeStep(RecipeStep $recipeStep): self
+    public function addRecipeCategoryId(RecipeCategory $recipeCategoryId): self
     {
-        if (!$this->recipeSteps->contains($recipeStep)) {
-            $this->recipeSteps->add($recipeStep);
-            $recipeStep->setRecipeID($this);
+        if (!$this->RecipeCategoryId->contains($recipeCategoryId)) {
+            $this->RecipeCategoryId->add($recipeCategoryId);
         }
 
         return $this;
     }
 
-    public function removeRecipeStep(RecipeStep $recipeStep): self
+    public function removeRecipeCategoryId(RecipeCategory $recipeCategoryId): self
     {
-        if ($this->recipeSteps->removeElement($recipeStep)) {
-            // set the owning side to null (unless already changed)
-            if ($recipeStep->getRecipeID() === $this) {
-                $recipeStep->setRecipeID(null);
-            }
-        }
+        $this->RecipeCategoryId->removeElement($recipeCategoryId);
 
         return $this;
     }
-
 }

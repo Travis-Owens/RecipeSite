@@ -18,7 +18,7 @@ class RecipeCategory
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'categoryID')]
+    #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'RecipeCategoryId')]
     private Collection $recipes;
 
     public function __construct()
@@ -55,7 +55,7 @@ class RecipeCategory
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes->add($recipe);
-            $recipe->addCategoryID($this);
+            $recipe->addRecipeCategoryId($this);
         }
 
         return $this;
@@ -64,9 +64,10 @@ class RecipeCategory
     public function removeRecipe(Recipe $recipe): self
     {
         if ($this->recipes->removeElement($recipe)) {
-            $recipe->removeCategoryID($this);
+            $recipe->removeRecipeCategoryId($this);
         }
 
         return $this;
     }
+
 }
