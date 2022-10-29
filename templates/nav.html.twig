@@ -74,6 +74,20 @@ hamburger.addEventListener("click", function(){
 })
 
 
+// Manage status of the nav bar across sessions
+if(typeof(localStorage.getItem("navBar")) === "object" ) {
+  // item doesn't exist, set it now. Default is 1 (open)
+  localStorage.setItem("navBar", 1);
+}
+
+if(localStorage.getItem("navBar") == "0") {
+  // Close the navbar
+  document.querySelector("body").classList.toggle("active");
+
+  if(document.querySelector("#pageContent") != null) {
+    document.querySelector("#pageContent").classList.toggle("active");
+  }
+}
 
 
 // Manages active page
