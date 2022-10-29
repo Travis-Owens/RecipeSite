@@ -4,9 +4,14 @@
   {% include 'header.html.twig' %}
 
   <body>
-    {% include 'nav.html.twig' %}
+    {% if renderNav == true %}
+      {% include 'nav.html.twig' %}
+    {% endif %}
 
-    {# Content Here #}
+    {# Page Content Here #}
+    <div class="" id="pageContent">
+
+    </div>
 
   </body>
 </html>
