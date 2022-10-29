@@ -21,16 +21,17 @@ class StepGroup
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'StepId', targetEntity: Step::class, orphanRemoval: true)]
-    private Collection $steps;
-
     #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'StepGroupId')]
     private Collection $recipes;
+
+    #[ORM\OneToMany(mappedBy: 'stepGroup', targetEntity: Step::class)]
+    private Collection $step;
 
     public function __construct()
     {
         $this->steps = new ArrayCollection();
         $this->recipes = new ArrayCollection();
+        $this->step = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,36 +64,6 @@ class StepGroup
     }
 
     /**
-     * @return Collection<int, Step>
-     */
-    public function getSteps(): Collection
-    {
-        return $this->steps;
-    }
-
-    public function addStep(Step $step): self
-    {
-        if (!$this->steps->contains($step)) {
-            $this->steps->add($step);
-            $step->setStepId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStep(Step $step): self
-    {
-        if ($this->steps->removeElement($step)) {
-            // set the owning side to null (unless already changed)
-            if ($step->getStepId() === $this) {
-                $step->setStepId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Recipe>
      */
     public function getRecipes(): Collection
@@ -114,6 +85,36 @@ class StepGroup
     {
         if ($this->recipes->removeElement($recipe)) {
             $recipe->removeStepGroupId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Step>
+     */
+    public function getStep(): Collection
+    {
+        return $this->step;
+    }
+
+    public function addStep(Step $step): self
+    {
+        if (!$this->step->contains($step)) {
+            $this->step->add($step);
+            $step->setStepGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStep(Step $step): self
+    {
+        if ($this->step->removeElement($step)) {
+            // set the owning side to null (unless already changed)
+            if ($step->getStepGroup() === $this) {
+                $step->setStepGroup(null);
+            }
         }
 
         return $this;

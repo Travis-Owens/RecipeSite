@@ -19,12 +19,11 @@ class Step
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'steps')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?StepGroup $StepId = null;
+    #[ORM\ManyToOne(inversedBy: 'step')]
+    private ?StepGroup $stepGroup = null;
 
     #[ORM\ManyToOne]
-    private ?Ingredient $IngredientId = null;
+    private ?Ingredient $ingredient = null;
 
     public function getId(): ?int
     {
@@ -55,26 +54,26 @@ class Step
         return $this;
     }
 
-    public function getStepId(): ?StepGroup
+    public function getStepGroup(): ?StepGroup
     {
-        return $this->StepId;
+        return $this->stepGroup;
     }
 
-    public function setStepId(?StepGroup $StepId): self
+    public function setStepGroup(?StepGroup $stepGroup): self
     {
-        $this->StepId = $StepId;
+        $this->stepGroup = $stepGroup;
 
         return $this;
     }
 
-    public function getIngredientId(): ?Ingredient
+    public function getIngredient(): ?Ingredient
     {
-        return $this->IngredientId;
+        return $this->ingredient;
     }
 
-    public function setIngredientId(?Ingredient $IngredientId): self
+    public function setIngredient(?Ingredient $ingredient): self
     {
-        $this->IngredientId = $IngredientId;
+        $this->ingredient = $ingredient;
 
         return $this;
     }
