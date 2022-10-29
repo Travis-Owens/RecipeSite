@@ -2,29 +2,29 @@
 
 namespace App\Entity;
 
-use App\Repository\RecipeStepRepository;
+use App\Repository\StepRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RecipeStepRepository::class)]
-class RecipeStep
+#[ORM\Entity(repositoryClass: StepRepository::class)]
+class Step
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $title = null;
 
     #[ORM\Column(length: 1024, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'recipeSteps')]
+    #[ORM\ManyToOne(inversedBy: 'steps')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?recipe $recipeID = null;
+    private ?StepGroup $StepId = null;
 
-    #[ORM\ManyToOne(inversedBy: 'recipeSteps')]
-    private ?ingredient $ingredientID = null;
+    #[ORM\ManyToOne]
+    private ?Ingredient $IngredientId = null;
 
     public function getId(): ?int
     {
@@ -36,7 +36,7 @@ class RecipeStep
         return $this->title;
     }
 
-    public function setTitle(?string $title): self
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -55,26 +55,26 @@ class RecipeStep
         return $this;
     }
 
-    public function getRecipeID(): ?recipe
+    public function getStepId(): ?StepGroup
     {
-        return $this->recipeID;
+        return $this->StepId;
     }
 
-    public function setRecipeID(?recipe $recipeID): self
+    public function setStepId(?StepGroup $StepId): self
     {
-        $this->recipeID = $recipeID;
+        $this->StepId = $StepId;
 
         return $this;
     }
 
-    public function getIngredientID(): ?ingredient
+    public function getIngredientId(): ?Ingredient
     {
-        return $this->ingredientID;
+        return $this->IngredientId;
     }
 
-    public function setIngredientID(?ingredient $ingredientID): self
+    public function setIngredientId(?Ingredient $IngredientId): self
     {
-        $this->ingredientID = $ingredientID;
+        $this->IngredientId = $IngredientId;
 
         return $this;
     }
