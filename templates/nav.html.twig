@@ -1,4 +1,93 @@
 
-<nav>
+<head>
+  <style media="screen">
+    *{
+      list-style: none;
+      text-decoration: none;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Open Sans', sans-serif;
+    }
 
-</nav>
+    body{
+      background: #f5f6fa;
+    }
+  </style>
+</head>
+
+
+<div class="wrapper">
+    <div class="section">
+        <div class="top_navbar">
+            <div class="hamburger">
+                <a href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+            </div>
+            <div id="" onclick="navigate(this)" class="top_navbar_title">
+                Recipe Site
+            </div>
+        </div>
+
+    </div>
+    <div class="sidebar" id="sideNavButtons">
+        <div class="brand">
+            {# <img src="" alt="logo"> #}
+            <span class="icon">
+              <i class="fas fa-kitchen-set"></i>
+            </span>
+            <h3>Recipe Site</h3>
+            <p>Recipes</p>
+        </div>
+        <ul>
+            <li>
+                <a href="#" id="/" onclick="navigate(this)" class="active">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span class="item">Home</span>
+                </a>
+
+                <a href="#" id="" onclick="navigate(this)">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span class="item">Example</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+
+var hamburger = document.querySelector(".hamburger");
+hamburger.addEventListener("click", function(){
+  document.querySelector("body").classList.toggle("active");
+  document.querySelector("#pageContent").classList.toggle("active");
+
+  // Update the localStorage
+  if(localStorage.getItem("navBar") == "0") {
+    localStorage.setItem("navBar", 1);
+  } else {
+    localStorage.setItem("navBar", 0);
+  }
+
+})
+
+
+
+
+// Manages active page
+function navigate(that) {
+  // Remove active
+  $("#sideNavButtons>ul>li>a.active").removeClass("active");
+
+  // i.e. "/test/here"
+  uri = that.id.replaceAll("/","\\\/");
+  uri += "?nav=false"
+
+  $("#pageContent").load(uri);
+
+  $(that).addClass("active");
+
+}
+</script>
