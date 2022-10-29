@@ -1,0 +1,11 @@
+#pageContent {
+  /* Left-Side navigation shown/hidden */
+  transition: all 0.5s ease;
+  padding-left: 8px;
+}
+
+#pageContent.active {
+  /* Left-Side navigation shown/hidden */
+  transition: all 0.5s ease;
+  padding-left: 233px;
+}
