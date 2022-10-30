@@ -11,19 +11,21 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
-use App\Service\StepManager;
 
-class StepAPIController extends AbstractController
+use App\Service\StepGroupManager;
+
+class StepGroupAPIController extends AbstractController
 {
 
-    private StepManager $StepManager;
+    private StepGroupManager $StepGroupManager;
     private Serializer $serializer;
 
-    public function __construct(StepManager $StepManager) {
+    public function __construct(StepGroupManager $StepGroupManager) {
 
-      // StepManager is used to interact with the step entities
-      $this->StepManager = $StepManager;
+      // StepGroupManager is used to interact with the step group entities
+      $this->StepGroupManager = $StepGroupManager;
 
       // Serializer is used for the API routes; converts entities to JSON
       $encoders = [new XmlEncoder(), new JsonEncoder()];
@@ -32,13 +34,13 @@ class StepAPIController extends AbstractController
 
     }
 
-    #[Route('/api/step', methods: ['GET', 'HEAD'])]
+    #[Route('/api/stepgroup', name: 'step', methods: ['GET', 'HEAD'])]
     public function api_readAll(): Response
     {
-      $steps = $this->StepManager->readAll();
+      $stepGroups = $this->StepGroupManager->readAll();
 
       // Prevent Circular Referencing; replace step->stepGroup object with object's id
-      return new JsonResponse($this->serializer->normalize($steps, 'json', [
+      return new JsonResponse($this->serializer->normalize($stepGroups, 'json', [
           'circular_reference_handler' => function ($object) {
               return $object->getId();
            }
@@ -46,14 +48,14 @@ class StepAPIController extends AbstractController
     }
 
 
-    #[Route('/api/step/{id}',  methods: ['GET'])]
+    #[Route('/api/stepgroup/{id}',  methods: ['GET'])]
     public function api_read(?int $id): Response
     {
       // Find the step requested
-      $step = $this->StepManager->read($id);
+      $stepGroup = $this->StepGroupManager->read($id);
 
       // Prevent Circular Referencing; replace step->stepGroup object with object's id
-      return new JsonResponse($this->serializer->normalize($step, 'json', [
+      return new JsonResponse($this->serializer->normalize($stepGroup, 'json', [
           'circular_reference_handler' => function ($object) {
               return $object->getId();
            }
@@ -61,7 +63,7 @@ class StepAPIController extends AbstractController
     }
 
 
-    #[Route('/api/step/create', methods: ['POST'])]
+    #[Route('/api/stepgroup/create', methods: ['POST'])]
     public function api_create(): JsonResponse
     {
 
@@ -72,13 +74,13 @@ class StepAPIController extends AbstractController
       $data = json_decode($json, true);
 
       // Create a new step using the step manager
-      $step_id = $this->StepManager->create($data['step_group_id'], $data['title'], $data['description'], $data['ingredient_id']);
+      $stepGroup_id = $this->StepGroupManager->create($data["name"], $data["description"]);
 
-      return new JsonResponse(array('id' => $step_id));
+      return new JsonResponse(array('id' => $stepGroup_id));
     }
 
 
-    #[Route('/api/step/update', methods: ['POST'])]
+    #[Route('/api/stepgroup/update', methods: ['POST'])]
     public function api_update(): JsonResponse
     {
       // Takes raw data from the request
@@ -89,14 +91,14 @@ class StepAPIController extends AbstractController
 
 
       // Create a new step using the step manager
-      $step_id = $this->StepManager->update($data['id'], $data['step_group_id'], $data['title'], $data['description'], $data['ingredient_id']);
+      $stepGroup_id = $this->StepGroupManager->update($data["id"], $data["name"], $data["description"]);
 
-      return new JsonResponse(array('id' => $step_id));
+      return new JsonResponse(array('id' => $stepGroup_id));
 
     }
 
 
-    #[Route('/api/step/{id}', methods: ['DELETE'])]
+    #[Route('/api/stepgroup/{id}', methods: ['DELETE'])]
     public function api_delete(): JsonResponse
     {
       return new JsonResponse(array('status' => 'Not Implemented'));

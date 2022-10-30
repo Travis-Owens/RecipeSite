@@ -13,8 +13,9 @@ class StepManager
   private $repository;
 
   private $ingredientManager;
+  private $stepGroupManager;
 
-  public function __construct(EntityManagerInterface $entityManager, IngredientManager $ingredientManager)
+  public function __construct(EntityManagerInterface $entityManager, StepGroupManager $stepGroupManager, IngredientManager $ingredientManager)
   {
     // Used to get repositories and presist objects
     $this->em = $entityManager;
@@ -26,6 +27,9 @@ class StepManager
     // Used to interact with childern entities
     $this->ingredientManager = $ingredientManager;
 
+    // Used to interact with parent entities
+    $this->stepGroupManager = $stepGroupManager;
+
   }
 
   public function create(?int $step_group_id, string $title, ?string $description, ?int $ingredient_id)
@@ -33,8 +37,10 @@ class StepManager
 
     $step = new Step();
 
-    // TODO: After step groups are implemented resolve this relation
-    $step->setStepGroup(null);
+    // Find the associated step group entity
+    $stepGroup = $this->stepGroupManager->read($step_group_id);
+
+    $step->setStepGroup($stepGroup);
 
     $step->setTitle($title);
     $step->setDescription($description);
@@ -64,8 +70,10 @@ class StepManager
 
     $step = $this->read($id);
 
-    // TODO: After step groups are implemented resolve this relation
-    $step->setStepGroup(null);
+    // Find the associated step group entity
+    $stepGroup = $this->stepGroupManager->read($step_group_id);
+
+    $step->setStepGroup($stepGroup);
 
     $step->setTitle($title);
     $step->setDescription($description);
