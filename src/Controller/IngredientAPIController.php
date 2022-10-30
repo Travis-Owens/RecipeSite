@@ -53,8 +53,13 @@ class IngredientAPIController extends AbstractController
     #[Route('/api/ingredient/create', methods: ['POST'])]
     public function api_create(): JsonResponse
     {
+      // Takes raw data from the request
+      $json = file_get_contents('php://input');
+      // Converts it into a PHP array
+      $data = json_decode($json, true);
+
       // Create a new ingredient using the ingredient manager
-      $ingredient_id = $this->IngredientManager->create($_POST['name'], $_POST['description']);
+      $ingredient_id = $this->IngredientManager->create($data['name'], $data['description']);
 
       return new JsonResponse(array('id' => $ingredient_id));
     }
@@ -63,8 +68,13 @@ class IngredientAPIController extends AbstractController
     #[Route('/api/ingredient/update', methods: ['POST'])]
     public function api_update(): JsonResponse
     {
+      // Takes raw data from the request
+      $json = file_get_contents('php://input');
+      // Converts it into a PHP array
+      $data = json_decode($json, true);
+
       // Create a new ingredient using the ingredient manager
-      $ingredient_id = $this->IngredientManager->update($_POST["id"], $_POST['name'], $_POST['description']);
+      $ingredient_id = $this->IngredientManager->update($data["id"], $data['name'], $data['description']);
 
       return new JsonResponse(array('id' => $ingredient_id));
 
