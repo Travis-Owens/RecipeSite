@@ -32,11 +32,17 @@ class StepAPIController extends AbstractController
 
     }
 
-    #[Route('/api/step', name: 'step', methods: ['GET', 'HEAD'])]
+    #[Route('/api/step', methods: ['GET', 'HEAD'])]
     public function api_readAll(): Response
     {
       $steps = $this->StepManager->readAll();
-      return new JsonResponse($this->serializer->normalize($steps, null));
+
+      // Prevent Circular Referencing; replace step->stepGroup object with object's id
+      return new JsonResponse($this->serializer->normalize($steps, 'json', [
+          'circular_reference_handler' => function ($object) {
+              return $object->getId();
+           }
+       ]));
     }
 
 
@@ -46,7 +52,12 @@ class StepAPIController extends AbstractController
       // Find the step requested
       $step = $this->StepManager->read($id);
 
-      return new JsonResponse($this->serializer->normalize($step, null));
+      // Prevent Circular Referencing; replace step->stepGroup object with object's id
+      return new JsonResponse($this->serializer->normalize($step, 'json', [
+          'circular_reference_handler' => function ($object) {
+              return $object->getId();
+           }
+       ]));
     }
 
 

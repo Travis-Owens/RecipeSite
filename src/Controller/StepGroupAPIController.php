@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+
 
 use App\Service\StepGroupManager;
 
@@ -36,7 +38,13 @@ class StepGroupAPIController extends AbstractController
     public function api_readAll(): Response
     {
       $stepGroups = $this->StepGroupManager->readAll();
-      return new JsonResponse($this->serializer->normalize($stepGroups, null));
+
+      // Prevent Circular Referencing; replace step->stepGroup object with object's id
+      return new JsonResponse($this->serializer->normalize($stepGroups, 'json', [
+          'circular_reference_handler' => function ($object) {
+              return $object->getId();
+           }
+       ]));
     }
 
 
@@ -46,7 +54,12 @@ class StepGroupAPIController extends AbstractController
       // Find the step requested
       $stepGroup = $this->StepGroupManager->read($id);
 
-      return new JsonResponse($this->serializer->normalize($stepGroup, null));
+      // Prevent Circular Referencing; replace step->stepGroup object with object's id
+      return new JsonResponse($this->serializer->normalize($stepGroup, 'json', [
+          'circular_reference_handler' => function ($object) {
+              return $object->getId();
+           }
+       ]));
     }
 
 

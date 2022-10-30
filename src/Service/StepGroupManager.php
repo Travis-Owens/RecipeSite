@@ -12,19 +12,16 @@ class StepGroupManager
   private $em;
   private $repository;
 
-  private $stepManager;
-
-  public function __construct(EntityManagerInterface $entityManager, StepManager $stepManager)
+  public function __construct(EntityManagerInterface $entityManager)
   {
+
+    // , StepManager $stepManager
     // Used to get repositories and presist objects
     $this->em = $entityManager;
 
     // Used to interact with entities (ingredients)
     $this->repository = $this->em
       ->getRepository(StepGroup::class);
-
-    // Used to interact with childern entities
-    $this->stepManager = $stepManager;
 
   }
 
