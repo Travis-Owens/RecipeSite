@@ -1,17 +1,42 @@
-<!doctype html>
-<html lang="en">
 
+{% if app.request.query.get('nav') != "false" %}
+  {# This is a nexted page, don't re-render pageContent #}
+  <!doctype html>
+  <html lang="en">
   {% include 'header.html.twig' %}
 
   <body>
-    {% if renderNav == true %}
-      {% include 'nav.html.twig' %}
-    {% endif %}
+  {% include 'nav.html.twig' %}
+
+  <div class="active" id="pageContent">
+{% endif %}
 
     {# Page Content Here #}
-    <div class="" id="pageContent">
 
-    </div>
+      {% if template is defined %}
+        {% include template %}
+      {% endif %}
 
-  </body>
-</html>
+
+
+{% if app.request.query.get('nav') != "false" %}
+  {# This is a nexted page, don't re-render pageContent #}
+
+      </div>
+
+    </body>
+
+  <script type="text/javascript">
+
+    // On load, checks the state of the left-side navBar
+    if(localStorage.getItem("navBar") == "0") {
+      // Close the navbar
+      document.querySelector("body").classList.toggle("active");
+
+      if(document.querySelector("#pageContent") != null) {
+        document.querySelector("#pageContent").classList.toggle("active");
+      }
+    }
+  </script>
+  </html>
+{% endif %}

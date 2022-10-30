@@ -42,14 +42,19 @@
         </div>
         <ul>
             <li>
-                <a href="#" id="/" onclick="navigate(this)" class="active">
+                <a href="#" id="" onclick="navigate(this)" class="active">
                     <span class="icon"><i class="fas fa-home"></i></span>
                     <span class="item">Home</span>
                 </a>
 
-                <a href="#" id="" onclick="navigate(this)">
+                <a href="#" id="ingredient" onclick="navigate(this)">
+                    <span class="icon"><i class="fas fa-layer-group"></i></span>
+                    <span class="item">Ingredients</span>
+                </a>
+
+                <a href="#" id="ingredient/create" onclick="navigate(this)">
                     <span class="icon"><i class="fas fa-home"></i></span>
-                    <span class="item">Example</span>
+                    <span class="item">Ingredient Create</span>
                 </a>
             </li>
         </ul>
@@ -80,15 +85,10 @@ if(typeof(localStorage.getItem("navBar")) === "object" ) {
   localStorage.setItem("navBar", 1);
 }
 
-if(localStorage.getItem("navBar") == "0") {
-  // Close the navbar
-  document.querySelector("body").classList.toggle("active");
 
-  if(document.querySelector("#pageContent") != null) {
-    document.querySelector("#pageContent").classList.toggle("active");
-  }
-}
-
+$('a').click(function(event) {
+    event.preventDefault();
+});
 
 // Manages active page
 function navigate(that) {
@@ -96,12 +96,18 @@ function navigate(that) {
   $("#sideNavButtons>ul>li>a.active").removeClass("active");
 
   // i.e. "/test/here"
-  uri = that.id.replaceAll("/","\\\/");
-  uri += "?nav=false"
+  uri = that.id.replaceAll("/","\/");
+  uri = uri.replace('#', '');
 
-  $("#pageContent").load(uri);
+  // Traverse from root
+  history.pushState({key:uri}, '', '/');
+
+  $("#pageContent").load(uri + "?nav=false");
 
   $(that).addClass("active");
+
+  // Update url
+  history.pushState({key:uri}, '', uri);
 
 }
 </script>
