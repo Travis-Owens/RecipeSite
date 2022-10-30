@@ -1,0 +1,10 @@
+
+
+{% for ingredient in ingredients %}
+
+  <div class="ingredient">
+    {% include '/ingredient/read.html.twig' with {'ingredient': ingredient} %}
+  </div>
+  <br>
+
+{% endfor %}

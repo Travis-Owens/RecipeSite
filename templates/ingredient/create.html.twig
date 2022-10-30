@@ -1,0 +1,45 @@
+<form id="ingredient_create" class="ingredient_create form">
+
+  <input type="text" name="id" value="{% if ingredient.id is defined %}{{ingredient.id}}{% endif %}" hidden>
+
+  <label for="name">Name:</label>
+  <input type="text" name="name" value="{% if name is defined %}{{name}}{% endif %}">
+  <br>
+  <label for="description">Description:</label>
+  <input type="text" name="description" value="{% if description is defined %}{{description}}{% endif %}">
+
+<input type="submit" name="" value="{% if ingredient.id is defined %}Update{% else %}Create{% endif %}">
+</form>
+
+<script type="text/javascript">
+
+  $("#ingredient_create").submit(function(event) {
+    // Prevent page from reloading/submitting
+    event.preventDefault();
+
+    var url = {% if ingredient.id is defined %} '/api/ingredient/update' {% else %} '/api/ingredient/create' {% endif %};
+
+    var data =  {
+      'id': $('input[name="id"]', event.target)[0].value,
+      'name' : $('input[name="name"]', event.target)[0].value,
+      'description': $('input[name="name"]', event.target)[0].value
+    };
+
+    $.ajax({
+
+      url : url,
+      type : "POST",
+      data : data,
+      dataType:'json',
+      success : function(data) {
+
+      },
+      error : function(request,error)
+      {
+          alert("Request: "+JSON.stringify(request));
+      }
+    });
+
+
+  });
+</script>
