@@ -18,6 +18,7 @@ class HomeController extends AbstractController
         }
 
         return $this->render('container.html.twig', [
+            'template' => "home.html.twig",
             'renderNav' => $renderNav
         ]);
     }
